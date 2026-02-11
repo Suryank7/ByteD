@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap');
+
+:root {
+  --main-bg-color: #f3f5fc;
+  --primary-color: #0288d1; /* InShare Branding Blue */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --text-color: #202020;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+  /* Windows 11 Bloom Dark/Blue Abstract Background */
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(96, 165, 250, 0.4), transparent 25%), 
+    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.4), transparent 25%), 
+    linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  overflow-y: auto;
+}
+
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 170px;
+  z-index: 100;
+  /* subtle blue tint to match theme if logo is mono/dark */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); 
+}
+
+/* Mica / Acrylic Card Effect */
+.upload-container, .download-container {
+  background: rgba(255, 255, 255, 0.45); /* More translucent for modern feel */
+  backdrop-filter: blur(30px) saturate(150%);
+  -webkit-backdrop-filter: blur(30px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px; /* Softer corners */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 500px;
+  max-width: 90%;
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+  animation: floatIn 0.8s ease-out forwards;
+  margin-top: 100px;
+}
+
+@keyframes floatIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.upload-container:hover, .download-container:hover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+.drop-zone {
+  width: 100%;
+  min-height: 220px;
+  border: 2px dashed rgba(0, 120, 212, 0.3); /* Theme color border */
+  border-radius: 16px;
+  margin: 25px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: rgba(240, 248, 255, 0.3); /* Very subtle blue tint */
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover effect for drop zone */
+.drop-zone:hover {
+  background: rgba(240, 248, 255, 0.6);
+  border-color: var(--primary-color);
+  transform: scale(1.01);
+}
+
+.dragged.drop-zone {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--primary-color);
+  box-shadow: inset 0 0 20px rgba(0, 120, 212, 0.1);
+}
+
+.icon-container {
+  width: 75px;
+  height: 100px;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.icon-container img {
+  width: 75px;
+  position: absolute;
+  left: 0; /* Align center */
+  transform-origin: bottom;
+  transition: transform 0.25s ease-in-out;
+}
+
+.center { z-index: 2; }
+.right, .left { filter: grayscale(0.5); transform: scale(0.9); }
+.dragged .right { transform: rotate(10deg) translateX(20px) scale(0.9); }
+.dragged .left { transform: rotate(-10deg) translateX(-20px) scale(0.9); }
+.dragged .center { transform: translateY(-5px); }
+
+#fileInput { display: none; }
+
+.browse-btn {
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Win11 Progress Bar */
+.progress-container {
+  width: 100%;
+  border: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 25px;
+  display: none;
+  height: 60px;
+  border-radius: 8px;
+  position: relative;
+  align-items: center;
+  background: rgba(255,255,255,0.5);
+  padding: 0 15px;
+  overflow: hidden;
+}
+
+.bg-progress {
+  background: rgba(0, 120, 212, 0.2);
+  width: 0%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: width 0.2s linear;
+  z-index: 1;
+}
+
+.inner-container {
+  width: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.percent-container {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 3px;
+  width: 100%;
+  background: var(--primary-color);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s linear;
+}
+
+/* Sharing Section */
+.sharing-container {
+  width: 100%;
+  display: none;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-container input {
+  width: 100%;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px; /* Win11 Input Radius */
+  padding: 10px 40px 10px 15px;
+  font-size: 14px;
+  background: rgba(255,255,255,0.6);
+  color: #333;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.input-container input:focus {
+  outline: none;
+  background: rgba(255,255,255,1);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.input-container #copyBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
+  background: transparent;
+  padding: 4px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.input-container #copyBtn svg {
+  fill: var(--primary-color);
+  width: 24px;
+  height: 24px;
+}
+
+.input-container #copyBtn:hover {
+  background: rgba(0, 120, 212, 0.1);
+}
+
+.email-info { margin-top: 20px; font-weight: 500;}
+
+.email-container {
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 8px;
+  padding: 20px;
+  background: rgba(240, 240, 240, 0.4);
+}
+
+.email-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-container .field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.email-container label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.email-container input {
+  border: none;
+  border-bottom: 1px solid #999;
+  padding: 6px 0;
+  background: transparent;
+  font-size: 15px;
+  transition: border-color 0.2s;
+}
+
+.email-container input:focus {
+  outline: none;
+  border-bottom-color: var(--primary-color);
+}
+
+/* Win11 Button */
+.email-container button, .download-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.email-container button:hover, .download-btn:hover {
+  background: #0063b1;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
+.download-btn {
+  display: inline-block;
+  text-decoration: none;
+}
+
+/* Toast */
+.toast {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translate(-50%, 60px);
+  padding: 12px 24px;
+  border-radius: 6px;
+  background: #202020;
+  color: white;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.toast.show {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media screen and (max-width: 900px) {
+  .logo { top: 20px; left: 20px; width: 120px; }
+  .upload-container { width: 350px; }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InShare - File Sharing Made Easy</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <img src="/img/logo.png" alt="Inshare logo" class="logo">
+    <div class="upload-container">
+        <div class="drop-zone">
+            <div class="icon-container">
+                <img src="/img/upload.png" draggable="false" class="center" alt="File Icon">
+                <img src="/img/upload.png" draggable="false" class="left" alt="File Icon">
+                <img src="/img/upload.png" draggable="false" class="right" alt="File Icon">
+            </div>
+            <input type="file" id="fileInput">
+            <div class="title">Drop your Files here or, <span class="browse-btn">browse</span></div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="bg-progress"></div>
+            <div class="inner-container">
+                <div class="title">Uploading...</div>
+                <div class="percent-container"><span id="percent">0</span>%</div>
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="sharing-container">
+            <p class="expire">Link expires in 24 hrs</p>
+            <div class="input-container">
+                <input type="text" id="fileURL" readonly>
+                <span id="copyBtn"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#0078d4"><path d="M0 0h24v24H0z" fill="none"/><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></span>
+            </div>
+            <p class="email-info">Or Send via Email</p>
+            <div class="email-container">
+                <form id="emailForm">
+                    <div class="field">
+                        <label for="sender">Your email</label>
+                        <input type="email" autocomplete="email" required name="from-email" id="sender">
+                    </div>
+                    <div class="field">
+                        <label for="receiver">Receiver's email</label>
+                        <input type="email" autocomplete="email" required name="to-email" id="receiver">
+                    </div>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="toast"></div>
+    
+    <script src="/js/index.js"></script>
+</body>
+</html>
