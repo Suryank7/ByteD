@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const path = require('path');
@@ -12,8 +13,9 @@ const connectDB = require('./config/db');
 connectDB();
 
 // Cors 
+const allowedClients = process.env.ALLOWED_CLIENTS ? process.env.ALLOWED_CLIENTS.split(',') : ['http://localhost:3000'];
 const corsOptions = {
-    origin: process.env.ALLOWED_CLIENTS.split(',')
+    origin: allowedClients
 }
 app.use(cors(corsOptions));
 
@@ -32,6 +34,8 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(4000||PORT, () => {
+app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 })
+
+module.exports = app;

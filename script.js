@@ -1,35 +1,33 @@
-
 const File  = require('./models/file');
 const fs  = require('fs');
 const connectDB = require('./config/db');
 connectDB();
 
-
-
 async function deleteData() {
-    //24 hours more files
+    // Files older than 24 hours
     const pastDate = new Date(Date.now() - 24*60*60*1000);
     const files = await File.find({ createdAt: { $lt: pastDate } });
 
     if (files.length) {
-        try {
-            for (const file of files) {
-                try {
+        for (const file of files) {
+            try {
+                if (fs.existsSync(file.path)) {
                     fs.unlinkSync(file.path);
-                    await file.remove();
-                    console.log(`successfully deleted the file`);
-                } catch (e) {
-                     console.log(`Error while deleting file ${e}`);
                 }
+                await File.deleteOne({ _id: file._id });
+                console.log(`Successfully deleted file: ${file.filename}`);
+            } catch (e) {
+                console.log(`Error while deleting file ${file.filename}: ${e}`);
             }
-        } catch (err) {
-             console.log(`Error while looping files ${err}`);
         }
     }
-    console.log('Job done!');
-    
+    console.log('Cleanup job done!');
 }
 
-deleteData().then(
-    process.exit()
-)
+deleteData().then(() => {
+    console.log('Process finished.');
+    process.exit();
+}).catch(err => {
+    console.error('Error in cleanup job:', err);
+    process.exit(1);
+});

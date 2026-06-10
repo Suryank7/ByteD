@@ -1,0 +1,29 @@
+Difficulties and Challenges Faced During the Project:
+
+1. Database Connection Failure:
+   - Problem: The MongoDB URI provided in the .env file (mongodb+srv://...) was unreachable (ENOTFOUND error) because the Atlas cluster domain does not exist.
+   - Solution: Switched to a local MongoDB URI (mongodb://127.0.0.1:27017/inshare) since a local MongoDB instance was found running on the machine. Improved error handling to provide helpful troubleshooting tips.
+
+2. Port Inconsistency:
+   - Problem: The server was listening on port 4000 while the environment variable and logs indicated port 3000.
+   - Solution: Synchronized the port configuration in server.js to use the PORT environment variable consistently.
+
+3. Lack of Error Handling in Routes:
+   - Problem: Asynchronous database operations (like file.save() and File.findOne()) were not wrapped in try-catch blocks. This caused the entire server to crash when the database was unreachable.
+   - Solution: Added try-catch blocks to all routes (upload, show, download) to handle database errors gracefully without crashing the server.
+
+4. Deprecated Mongoose Methods:
+   - Problem: The project used file.remove(), which is deprecated and removed in Mongoose v8.
+   - Solution: Replaced .remove() with .deleteOne() in the cleanup script and routes.
+
+5. Environment Variable Initialization:
+   - Problem: dotenv.config() was called late in the execution flow.
+   - Solution: Moved require('dotenv').config() to the very top of server.js to ensure all environment variables are available to all modules immediately.
+
+6. Cleanup Script Logic Error:
+   - Problem: script.js was calling process.exit() immediately, before the asynchronous file deletion job could finish.
+   - Solution: Refactored the script to use .then() properly so that it exits only after the job is complete.
+
+7. CORS Configuration:
+   - Problem: The CORS origin splitting would fail if ALLOWED_CLIENTS was missing from .env.
+   - Solution: Added a fallback check to ensure CORS works even if the environment variable is not defined.

@@ -34,15 +34,19 @@ router.post('/', (req,res) => {
       }
 
         //store into database
-        const file = new File({
-            filename: req.file.filename,
-            uuid: uuid4(),
-            path: req.file.path,
-            size: req.file.size
-        })
-        const response = await file.save();
-        return res.json({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}` });
-
+        try {
+            const file = new File({
+                filename: req.file.filename,
+                uuid: uuid4(),
+                path: req.file.path,
+                size: req.file.size
+            });
+            const response = await file.save();
+            res.json({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}` });
+        } catch (dbErr) {
+            console.error("❌ Database Error:", dbErr);
+            return res.status(500).send({ error: 'Database connection failed. Please try again later.' });
+        }
     });
 
 
